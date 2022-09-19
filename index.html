@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Convert and watch BY js2-->
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+<!--/<link href="//db.onlinewebfonts.com/c/ff2a407fe06752facf8828a86955e988?family=Matrix+Code+NFI" rel="stylesheet" type="text/css"/> //-->
+<link rel="stylesheet" href="styles.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="canvas.js"></script>
+<title>convrt-watch</title>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+    // geting canvas by id c
+    var c = document.getElementById("c");
+    var ctx = c.getContext("2d");
+    //making the canvas full screen
+    c.height = window.innerHeight;
+    c.width = window.innerWidth;
+    //chinese characters - taken from the unicode charset
+    var matrix = "abcdefghijklmnopqrstuwxyz012345678901#$%^&*()*&^%";
+    //converting the string into an array of single characters
+    matrix = matrix.split("");
+    var font_size = 14;
+    var columns = c.width/font_size; //number of columns for the rain
+    //an array of drops - one per column
+    var drops = [];
+    //x below is the x coordinate
+    //1 = y co-ordinate of the drop(same for every drop initially)
+    for(var x = 0; x < columns; x++)
+        drops[x] = 1; 
+    //drawing the characters
+    function draw()
+    {
+        //Black BG for the canvas
+        //translucent BG to show trail
+        ctx.fillStyle = "rgba(0, 0, 0, 0.04)";
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.fillStyle = "#0F0"; //green text
+        ctx.font = font_size + "px 'matrix code nfi'";
+        //looping over drops
+        for(var i = 0; i < drops.length; i++)
+        {
+            //a random chinese character to print
+            var text = matrix[Math.floor(Math.random()*matrix.length)];
+            //x = i*font_size, y = value of drops[i]*font_size
+            ctx.fillText(text, i*font_size, drops[i]*font_size);
+
+            //sending the drop back to the top randomly after it has crossed the screen
+            //adding a randomness to the reset to make the drops scattered on the Y axis
+            if(drops[i]*font_size > c.height && Math.random() > 0.975)
+                drops[i] = 0;
+
+            //incrementing Y coordinate
+            drops[i]++;
+        }
+    }
+    setInterval(draw, 35);
+</script>
+<div id="wrapper" style="z-index:1">
+    <div id="my-form">
+    <script type="text/javascript">
+    function mostrar() {
+        var nocookie = "https://www.youtube-nocookie.com/embed/";
+        var linkytb = $("#link").val(); // Cadena introducida URL
+        var linkytbproc = linkytb.split("&");  // Separo por caracter &
+        var x = linkytbproc[0]; // Tomo la URL sin más parámetros
+        xcadena = $("#link").val().includes("list="); // Valido si es un link de lista de reproducción
+    // Si es encuentra "list" en la cadena del hipervínculo es una lista de reproducción y se 
+    // procede a crear el link con nocookie
+        if (xcadena == true) {
+            var xlst = $("#link").val().split("=");
+            //alert(xlst[1]);  
+            var ytblnk = nocookie+"videoseries?list="+xlst[1];
+            // Convierto link a nocookie
+            $("#nocookie").val(nocookie+"videoseries?list="+xlst[1]);
+            var cnvrtweb = "https://yt1s.com/es6?q=";
+            // Genero link para descarga
+            var liga = cnvrtweb+ytblnk;
+            $("#descarga").val(liga);        
+            // Cargo link en el iframe
+            $('#ifrm').attr('src', nocookie+"videoseries?list="+xlst[1]);        
+    // Si no encuentra la cadena "list" en el hipervínculo procedo a dar 
+    // la salida al video individual con noccokie
+        } else if (xcadena == false) {
+            var xlink = x.split(".");  // Valido cadena de URL según el formato de la liga
+            var xxlink = xlink[0]; // Tomo primer valor de la matriz para comparar la cadena y convertirla a cadena de salida nocookie
+            // Valido el formato del link de youtube para construir la cadena nocookie
+            if(xxlink == "https://youtu") {
+                // Valido entrada   
+                     var xlnk = x.split("/");
+                     var xxlnk = xlnk[3]; 
+                     var ytblnk = nocookie+xxlnk;
+                     // Convierto link a nocookie
+                     $("#nocookie").val(nocookie+xxlnk+"?rel=0");
+                     var cnvrtweb = "https://yt1s.com/es6?q=";
+                     // Genero link para descarga
+                     var liga = cnvrtweb+ytblnk;
+                     $("#descarga").val(liga);        
+                     // Cargo link en el iframe
+                     $('#ifrm').attr('src', nocookie+xxlnk+"?rel=0");
+                 }
+                 else if(xxlink=="https://www") {
+                     // Valido entrada   
+                     var ytkey = (x).slice(24,29);
+                     if(ytkey == "watch") {
+                         var clave = x.split("=");
+                     }
+                     else if(ytkey == "embed") {
+                         var clave = x.split("https://www.youtube.com/embed/");
+                     } else {
+                         alert("URL no válida!...");
+                         $("#link").val('');
+                         $("#link").focus();
+                     }
+                     var ytblnk = nocookie+clave[1];
+                     // Convierto link a nocookie
+                     $("#nocookie").val(nocookie+clave[1]+"?rel=0");
+                     var cnvrtweb = "https://yt1s.com/es6?q=";
+                     // Genero link para descarga
+                     var liga = cnvrtweb+ytblnk;
+                     $("#descarga").val(liga);        
+                     // Cargo link en el iframe
+                     $('#ifrm').attr('src', nocookie+clave[1]+"?rel=0");
+                 }  
+                 else if(xxlink=="https://youtube"){
+                    alert(xxlink);
+                 }
+        }
+    }  
+    function download() {
+        $("#download").click(function(){
+            link=$("#descarga").val();
+            window.open(link);
+        })
+    }     
+    </script>
+    <input type="text" id="link" name="link" autofocus required />
+    <input type="text" id="nocookie" name="nocoockie" hidden />
+    <script>
+        $("input[type='text']").on("click", function() {
+            $(this).select();
+        });
+        $("input").focus(function() {
+            $(this).select();
+        });
+        $("input").focusin(function() {
+            $(this).select();
+        });
+    </script>    
+        <div id="sec-btn">
+            <button id="view" name="view" onclick="mostrar()">Mostrar</button>
+            <button id="download" name="download" onclick="download()">Descargar</button>
+            <input type="text" id="descarga" name="descarga" hidden />
+            <script type="text/javascript">                
+            </script>
+        </div>
+    </div>
+    <div id="contenedor">
+        <pre>
+        <iframe id="ifrm" src=" " frameborder="0" allowfullscreen="allowfullscreen" width="560" height="315"
+        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"></iframe>
+        <pre>
+    </div>    
+</div>
+</body>
+</html>
